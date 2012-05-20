@@ -22,7 +22,7 @@ object flatmap extends App {
     println(okIfNotNegative)
 
     // with flatMap
-    val results = keys flatMap { key =>
+    val results: List[(String, Int)]= keys flatMap { key =>
         map get key match {
             case Some(value) => Some(key -> value)
             case None => None

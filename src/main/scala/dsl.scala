@@ -14,7 +14,7 @@ object dsl extends App {
 
     implicit def IntsAreRepeatable(int: Int): RepeatableInt = RepeatableInt(int)
 
-    (5 times) repeat {
+    5.times.repeat {
         println("much better")
     }
 

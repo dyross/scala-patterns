@@ -20,7 +20,7 @@ object futures {
         val futureB = b
         val futureC = c
 
-        val bigFuture = Future sequence List(futureA, futureB, futureC)
+        val bigFuture: Future[List[_]] = Future sequence List(futureA, futureB, futureC)
 
         val results = Await.result(bigFuture, 10 seconds)
 
@@ -45,4 +45,31 @@ object futures {
             if (abc.b == 2) Some(abc) else None
         }
     }
+
+    // Really slow
+    def getScoreFromHBase(kloutId: String) = Future(100.0)
+    def getNameFromMySQL(klout: String) = Future("david")
+
+    case class Profile(score: Double, name: String)
+
+    def buildProfileWithScoreAndName(score: Double, name: String) =
+        Profile(score, name)
+
+    def blockingUgly: Profile = {
+        val scoreFuture = getScoreFromHBase("1")
+        val nameFuture = getNameFromMySQL("1")
+        val futureList: Future[List[Any]] =
+            Future sequence List(scoreFuture, nameFuture)
+        val results = Await result (futureList, 10 seconds) 
+        Profile(results(0).asInstanceOf[Double],
+                results(1).asInstanceOf[String])
+    }
+
+    def nonblockingPretty: Future[Profile] = {
+        val scoreFuture = getScoreFromHBase("1")
+        val nameFuture = getNameFromMySQL("1")
+        for (score <- scoreFuture; name <- nameFuture)
+            yield Profile(score, name) 
+    }
+
 }

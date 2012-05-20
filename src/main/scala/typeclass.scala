@@ -1,5 +1,9 @@
 object typeclass extends App {
 
+    trait ToBytesI[T] {
+        def toBytes: Array[Byte]
+    }
+
     trait ToBytes[T] {
         def toBytes(t: T): Array[Byte]
     }
@@ -23,6 +27,7 @@ object typeclass extends App {
 
     println(serialize("a string").toList)
     println(serialize(TwoStrings("two", "strings")).toList)
+    serialize("asdfa")(ToBytes.StringHasBytes)
 
     import annotation.implicitNotFound
 
